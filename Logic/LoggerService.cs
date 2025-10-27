@@ -2,14 +2,15 @@
 using System.Text.Json;
 using System.Text;
 using Newtonsoft.Json;
+using ErpApi.Models;
 
 namespace ErpApi.Logic
 {
     public class LoggerService
     {
-        SupplierChainContext db;
+        ErpContext db;
 
-        public LoggerService(SupplierChainContext context)
+        public LoggerService(ErpContext context)
         {
             db = context;
         }

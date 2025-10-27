@@ -1,7 +1,9 @@
 ﻿using ErpApi.Logic;
+using ErpApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
+using System.Xml;
 
 namespace ErpApi.Controllers
 {
@@ -12,6 +14,8 @@ namespace ErpApi.Controllers
     {
         private readonly InternalLogic _internalLogic;
         private readonly JwtTokenService _jwtService;
+        private readonly LoggerService Logger;
+        private readonly ErpContext _context;
 
         public OrganisationController(JwtTokenService jwtService)
         {
@@ -25,34 +29,63 @@ namespace ErpApi.Controllers
             string apiUser = Request.Headers["AUTH_USERNAME"];
             string _bearer_token = Request.Headers[HeaderNames.Authorization].ToString();
             var response = new Response();
+            ValidateTokenResponse principal = new ValidateTokenResponse();
+            Organisation org = new Organisation();
 
             if (string.IsNullOrEmpty(_bearer_token))
             {
                 response.StatusCode = 99;
                 response.StatusDescription = "API User Not Provided";
-                Logger.LogInformation(request.channel, "EarlyRepayment", "Response", request.memberId, resp.StatusCode + ":" + resp.StatusDescription, DateTime.Now.ToString(), resp);
+                Logger.LogInformation(request.OrganisationBRN, "RegisterOrganisation", "Response", request.OrganisationBRN, response.StatusCode + ":" + response.StatusDescription, DateTime.Now.ToString(), response);
 
             }
-            if (request.Username == "admin" && request.Password == "12345")
+            else 
             {
-                response = _jwtService.GenerateJwtToken(request.Username, "Admin");
-
-                if (string.IsNullOrEmpty(response.Token))
+                principal = _jwtService.ValidateToken(_bearer_token);
+                org.UniqueId = _internalLogic.uniqueCode();
+                if (string.IsNullOrEmpty(org.UniqueId))
                 {
                     response.StatusCode = 99;
-                    response.StatusDescription = "Token generation failed";
-                    return StatusCode(StatusCodes.Status500InternalServerError, response);
+                    response.StatusDescription = "Failed to generate uniqueCode";
                 }
+                else
+                {
+                    if (principal != null && principal.IsValid == true)
+                    {
 
-                response.StatusCode = 0;
-                response.StatusDescription = "Success";
-                response.Token = response.Token;
-                return Ok(response);
+                        org.UniqueId = org.UniqueId;
+                        org.Enabled = "0";
+                        org.Email = request.email;
+                        org.ApprovedOn = DateTime.Now;
+                        org.AccountNo = request.AccountNo;
+                        org.AccountName = request.AccountName;
+                        org.ApprovalStatus = "PENDING";
+                        org.Status = "Inactive";
+                        org.BankBranch = request.BankBranch;
+                        org.BankName = request.BankName;
+                        org.PhoneNumber = request.phoneNumber;
+                        org.Cif = request.AccountNo;
+                        org.CreatedBy = request.InputterUsername;
+                        org.Created = DateTime.Now;
+                   
+                        try
+                        {
+                            _context.organisation.Add(org);
+                            _context.SaveChanges();
+
+                            response.StatusDescription = "Success";
+                            response.StatusCode = 0;
+                        }
+                        catch (Exception ex)
+                        {
+                            response.StatusCode = 99;
+                            response.StatusDescription = "Failed";
+                        }
+                    } 
+                }
             }
 
-            response.StatusCode = 401;
-            response.StatusDescription = "Invalid username or password";
-            return Unauthorized(response);
+            return Ok(response);
         }
 
 
