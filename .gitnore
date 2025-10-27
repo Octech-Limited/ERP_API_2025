@@ -1,0 +1,29 @@
+# Ignore Visual Studio temporary files, build results, and personal settings
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+bin/
+obj/
+[Bb]uild/
+[Bb]uilds/
+
+# Others
+*.log
+*.tlog
+*.cache
+*.dbmdl
+*.bak
+*.tmp
+
+# Configuration
+appsettings.Development.json
+appsettings.Local.json
+
+# Package restore
+*.nupkg
+*.snupkg
+packages/

@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "udEOjaapMN11joAe1q3JUpTQETekjbpMg8LEGvXkuZ4=",
+  "Source": "ErpApi",
+  "BasePath": "_content/ErpApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
