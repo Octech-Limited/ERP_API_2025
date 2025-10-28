@@ -23,8 +23,9 @@ namespace ErpApi.Controllers
         }
 
 
-        [HttpPost("RegisterOrganisation")]
-        public IActionResult Login([FromBody] Logic.RegisterOrgRequest request)
+        // [HttpPost("RegisterOrganisation")]
+        [HttpPost]
+        public IActionResult RegisterOrganisation([FromBody] Logic.RegisterOrgRequest request)
         {
             string apiUser = Request.Headers["AUTH_USERNAME"];
             string _bearer_token = Request.Headers[HeaderNames.Authorization].ToString();
@@ -39,7 +40,7 @@ namespace ErpApi.Controllers
                 Logger.LogInformation(request.OrganisationBRN, "RegisterOrganisation", "Response", request.OrganisationBRN, response.StatusCode + ":" + response.StatusDescription, DateTime.Now.ToString(), response);
 
             }
-            else 
+            else
             {
                 principal = _jwtService.ValidateToken(_bearer_token);
                 org.UniqueId = _internalLogic.uniqueCode();
@@ -52,7 +53,6 @@ namespace ErpApi.Controllers
                 {
                     if (principal != null && principal.IsValid == true)
                     {
-
                         org.UniqueId = org.UniqueId;
                         org.Enabled = "0";
                         org.Email = request.email;
@@ -67,7 +67,10 @@ namespace ErpApi.Controllers
                         org.Cif = request.AccountNo;
                         org.CreatedBy = request.InputterUsername;
                         org.Created = DateTime.Now;
-                   
+                        org.DepartmentId = request.DepartmentId;
+                        org.Modified = DateTime.Now;
+                        org.ModifiedBy = request.InputterUsername;
+
                         try
                         {
                             _context.organisation.Add(org);
@@ -81,7 +84,7 @@ namespace ErpApi.Controllers
                             response.StatusCode = 99;
                             response.StatusDescription = "Failed";
                         }
-                    } 
+                    }
                 }
             }
 
@@ -89,36 +92,133 @@ namespace ErpApi.Controllers
         }
 
 
-        [HttpPost("ValidateToken")]
-        public IActionResult ValidateToken([FromBody] TokenValidationRequest request)
+        [HttpGet]
+        public IActionResult GetActiveOrganisations()
         {
-            ValidateTokenResponse principal = new ValidateTokenResponse();
-            if (request == null || string.IsNullOrEmpty(request.token))
+            var response = new GetOrganisationResponse();
+
+            try
             {
-                return BadRequest("Token is required");
+                var organisations = _context.organisation
+                    .Where(x => x.Status == "Active")
+                    .Select(x => new Datum
+                    {
+                        id = x.Id,
+                        organisationName = x.OrganisationName,
+                        organisationTin = x.OrganisationTin,
+                        status = x.Status,
+                        email = x.Email
+                    })
+                    .ToList();
+
+                response.StatusCode = 0;
+                response.StatusDescription = "Success";
+                response.data = organisations;
             }
-            else
+            catch (Exception ex)
             {
-                principal = _jwtService.ValidateToken(request.token);
-                if (principal != null && principal.IsValid == true)
-                {
-                    principal.Identity = new System.Security.Principal.GenericIdentity("User"); //
-                    principal.IsValid = true;
-                    principal.StatusCode = 0;
-                    principal.StatusDescription = "Token is valid.";
-                    return Ok(principal);
-                }
-                else
-                {
-                    principal.Identity = new System.Security.Principal.GenericIdentity("User"); //
-                    principal.IsValid = false;
-                    principal.StatusCode = 99;
-                    principal.StatusDescription = "Token is invalid or Expired";
-                    return Ok(principal);
-                }
+                response.StatusCode = 99;
+                response.StatusDescription = "Failed to retrieve organisations";
+                response.data = null;
             }
 
+            return Ok(response);
         }
+
+        [HttpGet]
+        public IActionResult GetActiveDepartments()
+        {
+            var response = new GetDepartmentResponse();
+
+            try
+            {
+                var departments = _context.department
+                    .Where(d => d.Status == "Active")
+                    .Select(d => new DepartmentDatum
+                    {
+                        id = d.Id,
+                        departmentName = d.DepartmentName,
+                        description = d.Description,
+                        status = d.Status
+                    })
+                    .ToList();
+
+                response.StatusCode = 0;
+                response.StatusDescription = "Success";
+                response.data = departments;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = 99;
+                response.StatusDescription = "Failed to retrieve departments";
+                response.data = null;
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        public IActionResult RegisterDepartment([FromBody] RegisterDepartmentRequest request)
+        {
+            var response = new GetDepartmentResponse();
+
+            try
+            {
+                if (string.IsNullOrEmpty(request.DepartmentName))
+                {
+                    response.StatusCode = 99;
+                    response.StatusDescription = "Department name is required";
+                    response.data = null;
+                    return Ok(response);
+                }
+
+                // Optional: Check for duplicates
+                var existing = _context.department
+                                       .FirstOrDefault(d => d.DepartmentName == request.DepartmentName);
+                if (existing != null)
+                {
+                    response.StatusCode = 99;
+                    response.StatusDescription = "Department already exists";
+                    response.data = null;
+                    return Ok(response);
+                }
+
+                // Create department object
+                var department = new Department
+                {
+                    DepartmentName = request.DepartmentName,
+                    Description = request.Description,
+                    Status = "Active",  // Default to Active
+                    Created = DateTime.Now,
+                    CreatedBy = request.CreatedBy
+                };
+
+                _context.department.Add(department);
+                _context.SaveChanges();
+
+                response.StatusCode = 0;
+                response.StatusDescription = "Department successfully created";
+                response.data = new List<DepartmentDatum>
+        {
+            new DepartmentDatum
+            {
+                id = department.Id,
+                departmentName = department.DepartmentName,
+                description = department.Description,
+                status = department.Status
+            }
+        };
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = 99;
+                response.StatusDescription = $"Failed to register department: {ex.Message}";
+                response.data = null;
+            }
+
+            return Ok(response);
+        }
+
 
     }
 }

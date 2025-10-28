@@ -1,8 +1,144 @@
 [
   {
+    "ContainingType": "ErpApi.Controllers.PayrollController",
+    "Method": "AddPayrollRecord",
+    "RelativePath": "api/AddPayrollRecord",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "ErpApi.Logic.PayrollRecord",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ErpApi.Controllers.PayrollController",
+    "Method": "ApprovePayrollCycle",
+    "RelativePath": "api/ApprovePayrollCycle",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "approvedBy",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ErpApi.Controllers.PayrollController",
+    "Method": "CreatePayrollCycle",
+    "RelativePath": "api/CreatePayrollCycle",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "ErpApi.Logic.PayrollCycle",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ErpApi.Controllers.PayrollController",
+    "Method": "GeneratePayslip",
+    "RelativePath": "api/GeneratePayslip",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "ErpApi.Logic.GeneratePayslipRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ErpApi.Controllers.OrganisationController",
+    "Method": "GetActiveDepartments",
+    "RelativePath": "api/GetActiveDepartments",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ErpApi.Controllers.EmployeeController",
+    "Method": "GetActiveEmployees",
+    "RelativePath": "api/GetActiveEmployees",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ErpApi.Controllers.OrganisationController",
+    "Method": "GetActiveOrganisations",
+    "RelativePath": "api/GetActiveOrganisations",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ErpApi.Controllers.EmployeeController",
+    "Method": "GetEmployeeById",
+    "RelativePath": "api/GetEmployeeById",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ErpApi.Controllers.PayrollController",
+    "Method": "GetPayslip",
+    "RelativePath": "api/GetPayslip",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "employeeId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "cycleId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ErpApi.Controllers.AuthenticationController",
     "Method": "Login",
-    "RelativePath": "api/Login/GetToken",
+    "RelativePath": "api/Login",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -16,24 +152,67 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ErpApi.Controllers.WeatherForecastController",
-    "Method": "Get",
-    "RelativePath": "WeatherForecast",
-    "HttpMethod": "GET",
+    "ContainingType": "ErpApi.Controllers.OrganisationController",
+    "Method": "RegisterDepartment",
+    "RelativePath": "api/RegisterDepartment",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
+    "Parameters": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[ErpApi.WeatherForecast, ErpApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
+        "Name": "request",
+        "Type": "ErpApi.Logic.RegisterDepartmentRequest",
+        "IsRequired": true
       }
     ],
-    "EndpointName": "GetWeatherForecast"
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ErpApi.Controllers.EmployeeController",
+    "Method": "RegisterEmployee",
+    "RelativePath": "api/RegisterEmployee",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "ErpApi.Logic.RegisterEmployeeRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ErpApi.Controllers.OrganisationController",
+    "Method": "RegisterOrganisation",
+    "RelativePath": "api/RegisterOrganisation",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "ErpApi.Logic.RegisterOrgRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ErpApi.Controllers.AuthenticationController",
+    "Method": "ValidateToken",
+    "RelativePath": "api/ValidateToken",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "ErpApi.Logic.TokenValidationRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

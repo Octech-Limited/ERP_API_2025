@@ -17,6 +17,12 @@ namespace ErpApi.Models
         }
 
         public virtual DbSet<Organisation> organisation { get; set; }
+        public DbSet<Department> department { get; set; }
+        public DbSet<Employee> employee { get; set; }
+        public DbSet<payslips> Payslips { get; set; }
+        public DbSet<payroll_records> payroll_Records { get; set; }
+        public DbSet<payroll_cycles> payroll_Cycles { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -10,6 +10,7 @@ namespace ErpApi.Models
         public string? OrganisationTin { get; set; }
         public string? OrganisationBRN { get; set; }
         public string? OrganisationNssfNo { get; set; }
+        public string? DepartmentId { get; set; }
         public DateTime? OnboardedDate { get; set; }
         public string? ApprovalStatus { get; set; }
         public string? CreatedBy { get; set; }
@@ -35,6 +36,8 @@ namespace ErpApi.Models
 
         public string? BankName { get; set; }
         public string? BankBranch { get; set; }
+        public DateTime? Modified { get; set; }
+        public string? ModifiedBy { get; set; }
 
         
     }

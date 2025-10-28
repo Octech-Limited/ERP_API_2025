@@ -17,7 +17,7 @@ namespace ErpApi.Controllers
             _jwtService = jwtService;
         }
 
-        [HttpPost("GetToken")]
+        [HttpPost]
         public IActionResult Login([FromBody] Logic.LoginRequest request)
         {
             var response = new GenerateTokenResponse();
@@ -45,7 +45,7 @@ namespace ErpApi.Controllers
         }
 
 
-        [HttpPost("ValidateToken")]
+        [HttpPost]
         public IActionResult ValidateToken([FromBody] TokenValidationRequest request)
         {
             ValidateTokenResponse principal = new ValidateTokenResponse();
